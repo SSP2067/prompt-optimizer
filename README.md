@@ -49,6 +49,32 @@ Main editor:
 3. Start the app with `Prompt_Optimizer.vbs` or `Prompt_Optimizer.bat`
 4. Open `http://localhost:3001`
 
+## Simple Install Guide
+
+For non-technical users on Windows:
+
+1. Download this project as a ZIP from GitHub
+2. Extract it to a folder on your computer
+3. Install Python and Node.js if they are not already installed
+4. Open the `backend` folder and copy `.env.example` as `.env`
+5. Add your own AI API keys inside the new `.env` file
+6. Open a terminal in the `backend` folder and run:
+
+```bash
+pip install -r requirements.txt
+```
+
+7. Open a terminal in the `frontend` folder and run:
+
+```bash
+npm install
+```
+
+8. Double-click `Prompt_Optimizer.vbs`
+9. Open `http://localhost:3001` in your browser
+
+If the app does not start, check that your API keys were added correctly in `backend/.env`.
+
 ## Environment File
 
 Create this file before running the backend:
