@@ -30,13 +30,13 @@ For commercial licensing requests, contact:
 
 ## Screenshots
 
-Add screenshots before publishing for a stronger GitHub landing page.
+Home screen:
 
-Suggested images:
+![Home screen](docs/images/home-with-projects.png)
 
-- project selection screen
-- main prompt editor screen
-- improved prompt result screen
+Main editor:
+
+![Main editor](docs/images/editor.png)
 
 ## Quick Start
 
