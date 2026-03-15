@@ -32,11 +32,15 @@ For commercial licensing requests, contact:
 
 Home screen:
 
-![Home screen](docs/images/home-with-projects.png)
+![Home screen](docs/images/home-safe.png)
+
+Create project form:
+
+![Create project form](docs/images/create-project-safe.png)
 
 Main editor:
 
-![Main editor](docs/images/editor.png)
+![Main editor](docs/images/editor-safe.png)
 
 ## Quick Start
 
