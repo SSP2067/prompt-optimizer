@@ -1,0 +1,33 @@
+# OS and editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.claude/
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.pytest_cache/
+.mypy_cache/
+.venv/
+venv/
+
+# Backend local and secret files
+backend/.env
+backend/prompts.db
+backend/.kb_embeddings.pkl
+
+# Frontend build and dependency folders
+frontend/node_modules/
+frontend/.next/
+frontend/out/
+frontend/build/
+frontend/coverage/
+frontend/*.tsbuildinfo
+
+# Generated share and artifact folders
+OneDrive_Share_Package/
+output/
+tmp/
+*.log

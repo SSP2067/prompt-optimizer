@@ -1,0 +1,11 @@
+fastapi
+uvicorn[standard]
+sqlalchemy
+anthropic
+openai
+tiktoken
+python-dotenv
+httpx
+sse-starlette
+sentence-transformers
+numpy

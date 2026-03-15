@@ -1,0 +1,200 @@
+[
+  {
+    "id": "zero-shot",
+    "technique": "zero-shot",
+    "when_to_use": "Simple, clear tasks where no examples are needed. Classification, translation, summarization with obvious output format.",
+    "keywords": ["classify", "summarize", "translate", "simple", "quick", "label", "categorize"],
+    "template": "Use action verbs: Classify / Summarize / Translate / Extract / Generate / List. Be specific about output format.",
+    "example_raw": "can you help me understand what sentiment this review has",
+    "example_optimized": "Classify the sentiment of the following review as POSITIVE, NEUTRAL, or NEGATIVE. Return only the label.\n\nReview: {review}",
+    "token_note": "Keep it to 1-2 sentences. No preamble. Lead with the verb.",
+    "source": "Prompt Engineering v7, p13-14"
+  },
+  {
+    "id": "few-shot",
+    "technique": "few-shot",
+    "when_to_use": "When you need the model to follow a specific output pattern, format, or style. Classification tasks, data extraction, JSON formatting, parsing. Use 3-5 diverse examples.",
+    "keywords": ["format", "pattern", "examples", "parse", "extract", "json", "structure", "consistent", "output style"],
+    "template": "EXAMPLE:\n{input_1}\n{output_1}\n\nEXAMPLE:\n{input_2}\n{output_2}\n\nNow do this:\n{actual_input}",
+    "example_raw": "i want to convert pizza orders into json format like size and toppings",
+    "example_optimized": "Parse pizza orders into JSON.\n\nEXAMPLE:\nInput: I want a small pizza with cheese and tomato sauce.\nJSON: {\"size\": \"small\", \"ingredients\": [\"cheese\", \"tomato sauce\"]}\n\nEXAMPLE:\nInput: Large pizza with basil and mozzarella.\nJSON: {\"size\": \"large\", \"ingredients\": [\"basil\", \"mozzarella\"]}\n\nInput: {order}\nJSON:",
+    "token_note": "Mix up output classes in examples to prevent order bias. 3-5 examples is ideal. Use diverse edge cases.",
+    "source": "Prompt Engineering v7, p15-17"
+  },
+  {
+    "id": "chain-of-thought",
+    "technique": "chain-of-thought",
+    "when_to_use": "Math, logic, multi-step reasoning, debugging, analysis where the path to the answer matters. Adds 'Think step by step' or shows example reasoning chain.",
+    "keywords": ["reasoning", "math", "calculate", "solve", "why", "explain", "steps", "logic", "figure out", "work out", "analyze", "debug", "problem"],
+    "template": "Set temperature=0 for CoT. Put 'Think step by step' at the end of the question, or show an example reasoning chain first.",
+    "example_raw": "whats 15 percent tip on a 67 dollar dinner for 3 people and how much does each person pay",
+    "example_optimized": "Calculate the tip and per-person cost. Think step by step.\n\nDinner total: $67\nTip rate: 15%\n\nStep 1: Calculate tip\nStep 2: Calculate total with tip\nStep 3: Divide by 3 people",
+    "token_note": "Always put the answer AFTER the reasoning. Set max_tokens higher (512+) to allow reasoning room. Use temperature=0.",
+    "source": "Prompt Engineering v7, p29-31"
+  },
+  {
+    "id": "role-prompting",
+    "technique": "role-prompting",
+    "when_to_use": "When you need domain expertise, a specific tone, or a persona. Creative writing, professional advice, code review, teaching. Assign a precise expert role.",
+    "keywords": ["act as", "you are", "expert", "professional", "tone", "style", "persona", "voice", "creative", "write like", "doctor", "lawyer", "engineer", "teacher", "coach"],
+    "template": "You are a [specific expert role]. [Task with clear output requirements].",
+    "example_raw": "help me write marketing copy for my new app its a productivity tool for developers",
+    "example_optimized": "You are a senior product marketer specializing in B2B developer tools.\n\nWrite 3 variations of a one-paragraph marketing copy for a developer productivity app.\n\nRequirements:\n- Tone: confident, technical, benefit-focused\n- Lead with the primary pain point solved\n- End with a clear value proposition\n- Max 60 words per variation",
+    "token_note": "Be specific about the role (not just 'expert' — say 'senior Python developer with 10 years FastAPI experience'). Include tone, style, and format requirements.",
+    "source": "Prompt Engineering v7, p21-23; Gemini Workspace Guide p2"
+  },
+  {
+    "id": "contextual",
+    "technique": "contextual",
+    "when_to_use": "When the task requires background knowledge to produce accurate results. Narrow the model's focus to the relevant domain. Add a Context: block before the task.",
+    "keywords": ["context", "background", "given that", "based on", "in the context of", "for this project", "considering", "domain", "field"],
+    "template": "Context: {relevant_background}\n\nTask: {specific_request}\n\nOutput format: {format}",
+    "example_raw": "write some blog post ideas for my blog about old video games",
+    "example_optimized": "Context: You are writing for a blog focused on retro 1980s arcade video games. Readers are nostalgic enthusiasts aged 30-50.\n\nGenerate 5 blog post topics. For each include:\n- Title\n- 2-sentence description\n- Target emotion (nostalgia / curiosity / humor)",
+    "token_note": "Keep context block focused — only include what changes the output. Cut generic filler. Specific context beats lengthy context.",
+    "source": "Prompt Engineering v7, p23-24"
+  },
+  {
+    "id": "step-back",
+    "technique": "step-back",
+    "when_to_use": "Complex creative, strategic, or open-ended tasks where a direct prompt produces generic results. First ask a broader question to activate background knowledge, then use that answer as context for the specific task.",
+    "keywords": ["creative", "story", "design", "strategy", "plan", "brainstorm", "explore", "ideate", "generate ideas", "come up with", "innovative"],
+    "template": "Step 1 (ask broad): What are the key principles / best examples / common patterns for [general topic]?\nStep 2 (use answer as context): Given these [principles], now [specific task].",
+    "example_raw": "write a storyline for a first person shooter video game level",
+    "example_optimized": "First, list 5 iconic settings used in acclaimed first-person shooter games and what makes each compelling (2 sentences each).\n\nThen, using one of those settings as inspiration, write a one-paragraph level storyline that is challenging and emotionally engaging. Include: setting, objective, plot twist.",
+    "token_note": "The 'step back' question costs tokens but dramatically improves quality on creative/strategic tasks. Worth it for complex outputs.",
+    "source": "Prompt Engineering v7, p25-28"
+  },
+  {
+    "id": "system-prompt",
+    "technique": "system-prompt",
+    "when_to_use": "Setting global rules, output constraints, safety guidelines, or JSON/structured output requirements that apply to the entire response. Separate from the user-facing task.",
+    "keywords": ["always", "never", "format", "json", "xml", "structure", "schema", "rules", "constraints", "output as", "return only", "safety", "tone throughout"],
+    "template": "System: {global_rules_and_format_requirements}\n\nUser: {task}",
+    "example_raw": "classify these reviews and give me the results in json with the movie name and whether its positive or negative",
+    "example_optimized": "Classify movie reviews. Return valid JSON only — no other text.\n\nSchema:\n{\"movie_reviews\": [{\"name\": string, \"sentiment\": \"POSITIVE\" | \"NEUTRAL\" | \"NEGATIVE\"}]}\n\nReviews to classify:\n{reviews}",
+    "token_note": "JSON output reduces hallucinations and enforces structure. Use json-repair library if truncation occurs. Schemas make output predictable.",
+    "source": "Prompt Engineering v7, p19-21"
+  },
+  {
+    "id": "self-consistency",
+    "technique": "self-consistency",
+    "when_to_use": "High-stakes classification or decisions where you need confidence in the answer. Run the same CoT prompt multiple times, take the majority vote. Use when wrong answers are costly.",
+    "keywords": ["confident", "certain", "verify", "double-check", "important decision", "critical", "accurate", "reliable", "consistent", "high stakes"],
+    "template": "Run the same CoT prompt 3x with temperature>0. Extract the answer from each. The most common answer is the most reliable.",
+    "example_raw": "is this email spam or legitimate i need to be sure",
+    "example_optimized": "Classify this email as SPAM or LEGITIMATE. Think step by step through these factors:\n1. Sender credibility\n2. Urgency/pressure tactics\n3. Request for sensitive info\n4. Language quality\n5. Contextual plausibility\n\nConclusion: [SPAM / LEGITIMATE] because {reason}.\n\nEmail: {email}",
+    "token_note": "Self-consistency costs 3x tokens but gives pseudo-probability of correctness. Use only for critical decisions.",
+    "source": "Prompt Engineering v7, p32-35"
+  },
+  {
+    "id": "ape",
+    "technique": "automatic-prompt-engineering",
+    "when_to_use": "When you need many variations of the same prompt (chatbot training, A/B testing copy, data augmentation). Use LLM to generate variants, evaluate with BLEU/ROUGE, select best.",
+    "keywords": ["variations", "variants", "alternatives", "rephrase", "different ways", "multiple versions", "a/b test", "training data", "augment"],
+    "template": "Generate {N} semantically equivalent variations of: '{original_prompt}'. Keep the same meaning but vary phrasing, formality, and structure.",
+    "example_raw": "give me different ways to say order a medium pepperoni pizza for my chatbot training",
+    "example_optimized": "Generate 10 semantically equivalent variations of the phrase: 'I want to order a medium pepperoni pizza.'\n\nVary: formality level, sentence structure, and phrasing. Keep identical meaning. Number each variation.",
+    "token_note": "Batch this call — generate all variants in one shot. Evaluate with local metrics, not LLM scoring, to save tokens.",
+    "source": "Prompt Engineering v7, p40-41"
+  },
+  {
+    "id": "code-generation",
+    "technique": "code-generation",
+    "when_to_use": "Writing, explaining, translating, or debugging code. Be explicit about language, version, style requirements. Include the error message when debugging.",
+    "keywords": ["code", "function", "script", "debug", "error", "fix", "write", "implement", "refactor", "python", "javascript", "sql", "bash", "api", "class", "bug"],
+    "template": "Language: {language} {version}\nTask: {what_to_build}\nRequirements: {constraints}\nOutput: Code only, with inline comments for non-obvious logic.",
+    "example_raw": "i have this python code that gives a nameerror on line 7 the function touppercase is not defined can u fix it",
+    "example_optimized": "Debug this Python code. Fix the NameError and any other bugs found.\n\nError: NameError: name 'toUpperCase' is not defined (line 7)\n\nAlso check for: variable name mismatches, wrong method names, indentation issues.\n\nReturn: corrected code + a bullet list of all changes made.\n\n```python\n{code}\n```",
+    "token_note": "Always include the exact error message. Ask for explanation of changes (not just fixed code) to catch secondary bugs.",
+    "source": "Prompt Engineering v7, p42-53"
+  },
+  {
+    "id": "output-format",
+    "technique": "system-prompt",
+    "when_to_use": "Extracting structured data, building APIs, processing for downstream use. JSON output reduces hallucinations, enables sorting/filtering, and makes data relationship-aware.",
+    "keywords": ["table", "list", "bullet", "json", "xml", "csv", "structured", "format", "organize", "rank", "sort", "compare", "extract data"],
+    "template": "Return results as {format}.\n\nSchema / structure:\n{schema}\n\nInput to process:\n{input}",
+    "example_raw": "compare these two job offers for me salary benefits location remote work",
+    "example_optimized": "Compare two job offers. Return as a markdown table.\n\nColumns: Criteria | Offer A | Offer B | Winner\nRows: Salary, Benefits, Location, Remote flexibility, Growth potential, Total score\n\nOffer A details: {offer_a}\nOffer B details: {offer_b}",
+    "token_note": "For large JSON outputs, use json-repair (PyPI) to handle truncation. Use schemas to guide structure and prevent hallucinated fields.",
+    "source": "Prompt Engineering v7, p60-63"
+  },
+  {
+    "id": "gemini-persona-task-context-format",
+    "technique": "role-prompting",
+    "when_to_use": "General-purpose framework for any workplace task: emails, reports, presentations, analysis. The PTCF framework (Persona + Task + Context + Format) from Google's Workspace guide.",
+    "keywords": ["email", "draft", "write", "report", "presentation", "meeting", "agenda", "summary", "memo", "communication", "workplace", "professional", "business"],
+    "template": "You are a {persona}. {Task with action verb}. Context: {relevant_background}. Format: {output_format}.",
+    "example_raw": "help me write an email to my team about the project delay",
+    "example_optimized": "You are a project manager. Draft a professional email to the engineering team about a 2-week project delay.\n\nContext: Sprint 4 is delayed due to unexpected API integration issues. Team morale is good. Stakeholders have not been notified yet.\n\nInclude: clear reason for delay, revised timeline, next steps, positive closing.\nTone: transparent, calm, action-oriented.\nLength: 3 short paragraphs.",
+    "token_note": "From Gemini Workspace Guide: effective prompts average 21 words with context. Most people use fewer than 9 words — specificity is the biggest quality lever.",
+    "source": "Gemini for Google Workspace Prompting Guide 101, p2-3"
+  },
+  {
+    "id": "variable-prompts",
+    "technique": "contextual",
+    "when_to_use": "Reusable prompts that run repeatedly with different inputs. Use {variable} placeholders to make prompts dynamic and avoid hardcoding values.",
+    "keywords": ["reuse", "template", "variable", "repeated", "batch", "multiple", "different inputs", "parameterize", "dynamic"],
+    "template": "Use {curly_brace_variables} for any value that changes between runs. Keep the static structure and instructions outside the variables.",
+    "example_raw": "write a fact about amsterdam for my travel blog",
+    "example_optimized": "You are a travel writer. Write one surprising, specific fact about {city} that would delight a curious traveler. Max 2 sentences. Avoid clichés.",
+    "token_note": "Variables make prompts reusable without re-engineering. Store as templates in the app's template library.",
+    "source": "Prompt Engineering v7, p58"
+  },
+  {
+    "id": "react",
+    "technique": "react",
+    "when_to_use": "Tasks involving tool use, web search, APIs, multi-step research, or any action-observation loop. The model reasons, acts (calls a tool), observes the result, then reasons again.",
+    "keywords": ["search", "look up", "find", "tool", "api", "action", "fetch", "retrieve", "browse", "agent", "research", "multi-step", "use tool"],
+    "template": "Thought: {reason about what to do}\nAction: {tool_name}[{input}]\nObservation: {tool_result}\n...repeat...\nFinal Answer: {answer}",
+    "example_raw": "search google for latest ai news and give me a summary",
+    "example_optimized": "Use the following format:\nThought: what do I need to find?\nAction: Search[query]\nObservation: search result\nThought: what did I learn?\nFinal Answer: concise summary\n\nTask: Find and summarize the 3 most significant AI news stories from the past 7 days. Focus on model releases, research breakthroughs, and policy changes.",
+    "token_note": "ReAct interleaves reasoning and action — ideal when you need the model to use tools. Each action-observation pair costs tokens but dramatically improves accuracy over single-shot queries.",
+    "source": "Yao et al. 2022 — ReAct: Synergizing Reasoning and Acting in Language Models"
+  },
+  {
+    "id": "least-to-most",
+    "technique": "least-to-most",
+    "when_to_use": "Complex problems that seem hard but can be broken into easier sub-problems. Ideal for multi-step tasks, complex coding, or anything where the final answer depends on intermediate results.",
+    "keywords": ["complex", "break down", "sub-problems", "step by step", "pipeline", "decompose", "first", "then", "finally", "multiple parts", "depends on"],
+    "template": "Step 1: Break this problem into sub-tasks in order of dependency.\nStep 2: Solve each sub-task, using the result of the previous one.\nFinal Step: Combine sub-answers into the complete solution.",
+    "example_raw": "build me a python script that reads a csv scrubs bad data and outputs clean json",
+    "example_optimized": "Build this in order — each step depends on the previous:\n\n1. Write a function to read a CSV file and return a list of dicts\n2. Write a data validation function that removes rows where: any field is empty, numeric fields contain non-numeric values, or date fields are malformed\n3. Write a function to convert the cleaned list of dicts to JSON and save to file\n4. Write a main() that chains all three functions with error handling\n\nLanguage: Python 3.11. Use only stdlib (csv, json). Add docstrings.",
+    "token_note": "Decompose first, then solve in order. Each sub-result feeds the next. Works better than asking for the full solution in one shot for complex tasks.",
+    "source": "Prompt Engineering v7; Least-to-Most Prompting (Zhou et al. 2022)"
+  },
+  {
+    "id": "generated-knowledge",
+    "technique": "generated-knowledge",
+    "when_to_use": "Factual questions, knowledge-intensive tasks, or anything requiring domain recall before answering. Ask the model to first generate relevant facts/context, then use those facts to answer.",
+    "keywords": ["facts", "what do you know", "background", "knowledge", "recall", "before answering", "domain knowledge", "explain", "understand", "inform"],
+    "template": "Step 1: Generate 3-5 key facts about {topic} relevant to answering this question.\nStep 2: Using those facts, answer: {question}",
+    "example_raw": "explain why transformer models are better than rnns for nlp",
+    "example_optimized": "First, list 5 key technical facts about how Transformer architecture differs from RNNs (focus on: attention mechanism, parallelization, long-range dependencies, training efficiency, and positional encoding).\n\nThen, using those facts, write a clear 3-paragraph explanation of why Transformers outperform RNNs for NLP tasks. Target audience: ML engineers familiar with deep learning basics.",
+    "token_note": "Generating knowledge first reduces hallucinations — the model commits to facts before answering. Costs ~100 extra tokens but significantly improves accuracy on knowledge-heavy tasks.",
+    "source": "Prompt Engineering v7; Liu et al. 2021 — Generated Knowledge Prompting"
+  },
+  {
+    "id": "iterative-prompting",
+    "technique": "iterative-prompting",
+    "when_to_use": "When you need to refine output progressively across multiple turns. Start with a base prompt, evaluate the actual LLM response, then feed that response back as context to generate a stronger second prompt. Especially powerful for CoT — the first response reveals the reasoning structure you can use to build proper few-shot examples.",
+    "keywords": ["refine", "improve", "iterate", "follow up", "build on", "previous response", "based on this", "given this answer", "adjust", "feedback", "not quite", "close but", "make it better", "revise"],
+    "template": "Pass 1: {initial_prompt}\n[Evaluate response]\nPass 2: Given this response: {response_preview}\nNow refine by: {specific_improvement}",
+    "example_raw": "the answer was close but missing edge cases, make it better",
+    "example_optimized": "The previous response handled the happy path correctly. Refine the solution to also handle these edge cases:\n1. Empty or null input → return empty result, not exception\n2. Values exceeding maximum limit → clamp with warning\n3. Invalid type inputs → raise TypeError with descriptive message\n\nReturn the complete corrected function with the same interface and docstring.",
+    "token_note": "Use the LLM's own reasoning structure to guide refinement. If it reasoned step-by-step, identify which steps were weak and ask for those specifically. If it gave examples, ask for counter-examples or edge cases.",
+    "source": "ISB Prompt Engineering Course — Iterative Prompting module"
+  },
+  {
+    "id": "prompt-chaining",
+    "technique": "prompt-chaining",
+    "when_to_use": "Multi-stage workflows where output of one LLM call feeds the next. Document processing pipelines, research + summarize + format chains, or any task too complex for a single prompt.",
+    "keywords": ["first do", "then use", "pipeline", "workflow", "stage", "sequence", "chain", "output of", "result into", "pass to", "multi-stage", "process"],
+    "template": "This is a multi-step task. Break it into a chain:\nPrompt 1: {first_task} → Output: {intermediate_result}\nPrompt 2: Using {intermediate_result}, {second_task} → Output: {final_result}",
+    "example_raw": "read this article extract the key points and then write a tweet thread about it",
+    "example_optimized": "This is a 3-prompt chain. Execute in sequence:\n\nPrompt 1 — Extract: From the article below, extract the 5 most important points. Format as numbered list. Each point: 1 sentence max.\n\nPrompt 2 — Prioritize: From those 5 points, select the 3 most tweet-worthy. Explain why each would resonate on Twitter.\n\nPrompt 3 — Write: Convert the 3 selected points into a Twitter thread. Tweet 1: hook. Tweets 2-4: one point each. Tweet 5: call-to-action. Max 280 chars per tweet.\n\nArticle: {article}",
+    "token_note": "Design chains so each prompt has a single, clear job. Pass only the minimum needed output between steps. Reduces context window pressure and improves each step's quality.",
+    "source": "Prompt Engineering v7, p45-50; Anthropic prompt chaining best practices"
+  }
+]
